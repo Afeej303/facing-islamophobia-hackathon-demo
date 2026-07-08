@@ -22,7 +22,7 @@ export default function AccountDetail({ accountId }) {
       const result = await analyzeComment({
         comment_text: comment.text,
         claim_key: comment.claim_key,
-        language: "english",
+        language: comment.account_id?.startsWith("src_") ? "malayalam" : "english",
       });
       setResponse(result);
     } catch (exception) {

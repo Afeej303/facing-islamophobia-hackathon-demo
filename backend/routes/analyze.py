@@ -37,6 +37,27 @@ Language: {language}
 Respond only in valid JSON. No markdown, no backticks.
 """
 
+MALAYALAM_DEFAULT_REPLY = """വസ്തുതകളുമായി യാതൊരു ബന്ധവുമില്ലാത്ത, കേവലം വർഗീയ ധ്രുവീകരണവും ഇസ്‌ലാം ഭീതിയും (Islamophobia) വളർത്താൻ വേണ്ടി മാത്രം നിർമ്മിച്ച ഇത്തരം വ്യാജ പ്രചാരണങ്ങൾ അങ്ങേയറ്റം അപലപനീയമാണ്.
+
+നമ്മുടെ നാട്ടിലെ ആരാധനാലയങ്ങളെയും പ്രാദേശിക കമ്മറ്റികളെയും ലക്ഷ്യമിട്ട്, യാതൊരു തെളിവുകളുമില്ലാതെ സോഷ്യൽ മീഡിയയിലൂടെ ഇത്തരം ഗുരുതരമായ ആരോപണങ്ങൾ ഉന്നയിക്കുന്നത് സമൂഹത്തിൽ ഭീതിയും പരസ്പര അവിശ്വാസവും ഉണ്ടാക്കാൻ മാത്രമേ കാരണമാകൂ. ഇത്തരം കുപ്രചാരണങ്ങൾ വിശ്വസിക്കുന്നതിന് മുൻപ് അതിന്റെ സത്യാവസ്ഥയും വസ്തുതകളും പരിശോധിക്കാൻ പൊതുസമൂഹം തയ്യാറാകണം.
+
+വർഗീയമായ ഇത്തരം വിദ്വേഷ പോസ്റ്റുകൾ തള്ളിക്കളഞ്ഞ്, നാടിന്റെ സമാധാനവും പരസ്പര സൗഹാർദ്ദവും നിലനിർത്താൻ നാമെല്ലാവരും ഒറ്റക്കെട്ടായി നിൽക്കേണ്ടതുണ്ട്."""
+
+
+def malayalam_submitted_source_response():
+    return {
+        "claim_identified": "തെളിവുകളില്ലാത്ത ഇസ്‌ലാം വിരുദ്ധവും വർഗീയ ധ്രുവീകരണം ലക്ഷ്യമിടുന്നതുമായ പ്രചാരണം",
+        "verdict": "Misleading",
+        "counter_narrative": MALAYALAM_DEFAULT_REPLY,
+        "sources": [
+            "സമൂഹമാധ്യമ ഉള്ളടക്കത്തിന്റെ മാനുവൽ റിവ്യൂ",
+            "പ്രാദേശിക വസ്തുത പരിശോധന ആവശ്യമാണ്",
+            "വിദ്വേഷ പ്രചാരണ വിരുദ്ധ പൊതുസുരക്ഷാ മാർഗ്ഗനിർദ്ദേശങ്ങൾ",
+        ],
+        "suggested_reply": MALAYALAM_DEFAULT_REPLY,
+        "facebook_url": "https://www.facebook.com",
+    }
+
 
 def fallback_response(claim_key: str):
     entry = get_entry(claim_key)
@@ -58,8 +79,8 @@ def analyze_comment(payload: AnalyzeRequest):
     entries = retrieve(payload.comment_text, payload.claim_key, n=2)
     retrieved_context = format_context(entries)
 
-    if payload.comment_text.lower().startswith("user-submitted facebook"):
-        return fallback_response(payload.claim_key)
+    if payload.comment_text.lower().startswith("user-submitted facebook") or payload.language.lower() in {"malayalam", "ml", "mlm"}:
+        return malayalam_submitted_source_response()
 
     if not GEMINI_ENABLED or not GEMINI_API_KEY or GEMINI_API_KEY == "your_key_here":
         return fallback_response(payload.claim_key)

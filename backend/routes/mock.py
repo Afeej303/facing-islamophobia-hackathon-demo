@@ -2,6 +2,8 @@ from fastapi import APIRouter, HTTPException
 
 router = APIRouter()
 
+SUBMITTED_SOURCE_TEXT = "ഉപയോക്താവ് സമർപ്പിച്ച മലയാളത്തിലുള്ള ഫേസ്ബുക്ക് പോസ്റ്റ്/റീൽ ഇസ്‌ലാം വിരുദ്ധ ഉള്ളടക്കമായി ഫ്ലാഗ് ചെയ്തിരിക്കുന്നു. കൃത്യമായ ഉള്ളടക്കം പരിശോധിക്കാൻ ഒറിജിനൽ ലിങ്ക് തുറക്കുക."
+
 ACCOUNTS = [
     {
         "id": "acc_001",
@@ -208,8 +210,8 @@ COMMENTS = {
         {
             "id": "src_cmt_001",
             "account_id": "src_001",
-            "author": "Submitted Facebook source",
-            "text": "User-submitted Facebook post flagged for Islamophobic content. Open the original source link to review the exact content and resolve the account once Facebook API access is connected.",
+            "author": "സമർപ്പിച്ച ഫേസ്ബുക്ക് ഉറവിടം",
+            "text": SUBMITTED_SOURCE_TEXT,
             "post_url": "https://www.facebook.com/share/p/17f4pREHtH/",
             "likes": 0,
             "timestamp": "Jul 10, 2:37 PM",
@@ -221,8 +223,8 @@ COMMENTS = {
         {
             "id": "src_cmt_002",
             "account_id": "src_002",
-            "author": "Submitted Facebook source",
-            "text": "User-submitted Facebook post flagged for Islamophobic content. Open the original source link to review the exact content and resolve the account once Facebook API access is connected.",
+            "author": "സമർപ്പിച്ച ഫേസ്ബുക്ക് ഉറവിടം",
+            "text": SUBMITTED_SOURCE_TEXT,
             "post_url": "https://www.facebook.com/share/p/18rwTG8eks/",
             "likes": 0,
             "timestamp": "Jul 10, 2:38 PM",
@@ -234,8 +236,8 @@ COMMENTS = {
         {
             "id": "src_cmt_003",
             "account_id": "src_003",
-            "author": "Submitted Facebook source",
-            "text": "User-submitted Facebook reel flagged for Islamophobic content. Open the original source link to review the exact content and resolve the account once Facebook API access is connected.",
+            "author": "സമർപ്പിച്ച ഫേസ്ബുക്ക് ഉറവിടം",
+            "text": SUBMITTED_SOURCE_TEXT,
             "post_url": "https://www.facebook.com/share/r/1H4GzR4Zn3/",
             "likes": 0,
             "timestamp": "Jul 10, 2:40 PM",
@@ -247,8 +249,8 @@ COMMENTS = {
         {
             "id": "src_cmt_004",
             "account_id": "src_004",
-            "author": "Submitted Facebook source",
-            "text": "User-submitted Facebook video flagged for Islamophobic content. Open the original source link to review the exact content and resolve the account once Facebook API access is connected.",
+            "author": "സമർപ്പിച്ച ഫേസ്ബുക്ക് ഉറവിടം",
+            "text": SUBMITTED_SOURCE_TEXT,
             "post_url": "https://www.facebook.com/share/v/18JKkX5EW8/",
             "likes": 0,
             "timestamp": "Jul 10, 2:43 PM",
@@ -260,8 +262,8 @@ COMMENTS = {
         {
             "id": "src_cmt_005",
             "account_id": "src_005",
-            "author": "Submitted Facebook source",
-            "text": "User-submitted Facebook video flagged for Islamophobic content. Open the original source link to review the exact content and resolve the account once Facebook API access is connected.",
+            "author": "സമർപ്പിച്ച ഫേസ്ബുക്ക് ഉറവിടം",
+            "text": SUBMITTED_SOURCE_TEXT,
             "post_url": "https://www.facebook.com/share/v/1GHMJmXj6z/",
             "likes": 0,
             "timestamp": "Jul 10, 2:44 PM",

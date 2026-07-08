@@ -1,0 +1,58 @@
+[
+  {
+    "key": "demographic_replacement",
+    "claim": "Muslim population will overtake Hindus in India / demographic replacement conspiracy",
+    "facts": "Census of India 2011 shows Muslim growth rate declined from 29.5% (1991-2001) to 24.6% (2001-2011). Pew Research Center 2015 projects Muslims will be 18.4% of India's population by 2050. Fertility rates among Indian Muslims are converging with national average as education and income levels rise. This mirrors global patterns, with Muslim fertility decline documented in Bangladesh, Iran, and Turkey.",
+    "sources": ["Census of India 2011", "Pew Research Center 2015", "Economic and Political Weekly"],
+    "quran_ref": null
+  },
+  {
+    "key": "love_jihad",
+    "claim": "Love jihad - Muslim men systematically targeting Hindu women for forced conversion",
+    "facts": "Multiple Indian High Courts have found no evidence of an organized love jihad conspiracy. Allahabad High Court rulings have affirmed that marriage and religious choice are protected aspects of personal liberty under Article 21. National Investigation Agency inquiries in Kerala did not establish an organized conspiracy. Inter-religious marriages constitute a small share of all marriages in India according to NFHS data.",
+    "sources": ["Allahabad High Court judgments", "NIA investigation findings", "NFHS-5 2019-21"],
+    "quran_ref": "Quran 2:256 - There is no compulsion in religion"
+  },
+  {
+    "key": "madrasa_radicalization",
+    "claim": "Madrasas are radicalization factories teaching hatred",
+    "facts": "India has tens of thousands of madrasas educating students primarily in Islamic studies, Arabic, Urdu, and standard subjects. State surveys in Uttar Pradesh, Bihar, and Kerala have found curriculum focused on theology, language, and academics. Kerala's madrasa system is formally integrated with state education structures. Studies by Yoginder Sikand and others describe community education and traditional scholarship as primary functions.",
+    "sources": ["Yoginder Sikand: Bastions of the Believers", "Kerala Education Department Survey", "Sachar Committee Report 2006"],
+    "quran_ref": "Quran 96:1 - Read in the name of your Lord who created"
+  },
+  {
+    "key": "waqf_land_grab",
+    "claim": "Waqf boards are illegally grabbing land across India",
+    "facts": "Waqf properties are charitable endowments registered under the Waqf Act 1995 and managed by statutory Waqf Boards under state governments. Property disputes involving Waqf are adjudicated by Waqf Tribunals and courts. The Sachar Committee found Waqf properties are often under-utilized or encroached upon. Many disputes involve government or private parties occupying legitimately registered Waqf land.",
+    "sources": ["Waqf Act 1995", "Sachar Committee Report 2006", "Ministry of Minority Affairs Waqf data"],
+    "quran_ref": null
+  },
+  {
+    "key": "islam_spread_by_sword",
+    "claim": "Islam was spread by the sword / forced conversions",
+    "facts": "Historians including Richard Bulliet and Thomas Arnold document that Islam spread through trade networks, Sufi missionaries, and social contact across Southeast Asia, West Africa, and South Asia. Indonesia and Malaysia were not conquered by Muslim armies. Kerala's Muslim community traces origins to Arab traders in the 7th and 8th centuries. Academic consensus distinguishes political conquest from gradual religious conversion.",
+    "sources": ["Thomas Arnold: The Preaching of Islam", "Richard Bulliet: Islam: The View from the Edge", "K.M. Panikkar: Malabar and the Portuguese"],
+    "quran_ref": "Quran 2:256 - There is no compulsion in religion"
+  },
+  {
+    "key": "cow_slaughter",
+    "claim": "Muslims slaughter cows to deliberately provoke and insult Hindus",
+    "facts": "Beef consumption and cattle slaughter are regulated differently across Indian states. The Supreme Court has upheld state authority to regulate cattle slaughter while recognizing diverse food practices. Islam permits but does not mandate beef consumption. Dietary practices vary among Indian Muslims, and framing food choice as deliberate provocation misrepresents both religious practice and constitutional rights.",
+    "sources": ["State of Gujarat v Mirzapur Moti Kureshi 2005", "Kerala slaughter regulation", "NFHS dietary data"],
+    "quran_ref": null
+  },
+  {
+    "key": "terrorism_association",
+    "claim": "Muslims are inherently linked to terrorism / all Muslims are suspects",
+    "facts": "Collective guilt narratives violate principles of individual culpability and equal citizenship. Global Terrorism Index reporting documents multiple forms of extremist violence, including growing right-wing extremism in many countries. In India, rights groups have raised concerns about over-policing and low conviction rates in some anti-terror cases. Indian Muslims have served in the armed forces, judiciary, civil services, arts, sports, and public life.",
+    "sources": ["Global Terrorism Index", "NCRB data", "People's Union for Civil Liberties reports"],
+    "quran_ref": "Quran 5:32 - Whoever kills one person it is as if he killed all of mankind"
+  },
+  {
+    "key": "muslim_personal_law",
+    "claim": "Muslim personal law oppresses women / triple talaq proves Islam is anti-woman",
+    "facts": "The Supreme Court of India declared instant triple talaq unconstitutional in Shayara Bano v Union of India in 2017, and Parliament criminalized it in 2019. Classical Islamic divorce law includes waiting periods and reconciliation attempts. Muslim women in India have property rights under Islamic law including mehr and inheritance shares. Personal law reform remains an active debate within Muslim communities.",
+    "sources": ["Shayara Bano v Union of India 2017", "Muslim Women Protection of Rights on Marriage Act 2019", "Flavia Agnes: Muslim Women and Personal Law"],
+    "quran_ref": "Quran 4:19 - Treat women with kindness"
+  }
+]

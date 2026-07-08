@@ -91,6 +91,14 @@ To open both app terminals on Windows:
 open-app-terminals.bat
 ```
 
+The easiest Windows path is:
+
+```bash
+START_ISLAMGUARD.bat
+```
+
+It opens the backend, opens the frontend, and then opens the Shield panel.
+
 Open the Vite URL shown in the terminal.
 
 ## Demo Flow

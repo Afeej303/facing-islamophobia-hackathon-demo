@@ -6,7 +6,7 @@ from urllib.request import urlopen
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
 
-from config import FB_APP_ID, FB_APP_SECRET, FB_GRAPH_VERSION, FB_REDIRECT_URI
+from config import FB_APP_ID, FB_APP_SECRET, FB_GRAPH_VERSION, FB_REDIRECT_URI, FRONTEND_URL
 
 router = APIRouter()
 
@@ -72,6 +72,7 @@ def facebook_login_url():
 
 
 def callback_page(title: str, message: str):
+    shield_url = f"{FRONTEND_URL.rstrip('/')}/shield"
     return f"""
     <!doctype html>
     <html>
@@ -81,6 +82,7 @@ def callback_page(title: str, message: str):
           <h1 style="margin-top: 0;">{title}</h1>
           <p style="line-height: 1.6;">{message}</p>
           <p style="line-height: 1.6; color: #64748b;">Return to IslamGuard, open the Shield panel, and click Connect account. Facebook must send you back here with a temporary authorization code.</p>
+          <p><a href="{shield_url}" style="display: inline-block; padding: 10px 14px; background: #10b981; color: white; border-radius: 8px; text-decoration: none; font-weight: 700;">Back to Shield panel</a></p>
         </main>
       </body>
     </html>
@@ -132,13 +134,15 @@ def facebook_callback(
     _connection["connected"] = bool(pages)
     _connection["pages"] = pages
 
-    return """
+    shield_url = f"{FRONTEND_URL.rstrip('/')}/shield"
+    return f"""
     <!doctype html>
     <html>
       <head><title>Facebook connected</title></head>
       <body style="font-family: Inter, Arial, sans-serif; padding: 32px;">
         <h1>Facebook connection complete</h1>
         <p>You can close this tab and return to IslamGuard.</p>
+        <p><a href="{shield_url}">Back to Shield panel</a></p>
       </body>
     </html>
     """

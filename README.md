@@ -42,7 +42,8 @@ GEMINI_API_KEY=your_key_here
 FB_APP_ID=your_meta_app_id
 FB_APP_SECRET=your_meta_app_secret
 FB_GRAPH_VERSION=v20.0
-FB_REDIRECT_URI=http://127.0.0.1:8000/api/facebook/callback
+FB_REDIRECT_URI=https://your-ngrok-domain.ngrok-free.app/api/facebook/callback
+FRONTEND_URL=http://127.0.0.1:5173
 ```
 
 Frontend `.env`:
@@ -133,13 +134,21 @@ In demo mode, `routes/mock.py` provides representative Facebook data. A producti
 The Shield panel now has a real OAuth starter flow. To connect a Facebook account:
 
 1. Create a Meta developer app with the Pages API use case.
-2. Add this OAuth redirect URI in the Meta dashboard:
+2. Start the backend on port 8000.
+3. In a separate terminal, expose the backend with ngrok:
 
 ```bash
-http://127.0.0.1:8000/api/facebook/callback
+ngrok http 8000
 ```
 
-3. Request the minimum Page permissions used by the demo:
+4. Copy the HTTPS forwarding URL from ngrok, then set the backend redirect URI:
+
+```bash
+FB_REDIRECT_URI=https://your-ngrok-domain.ngrok-free.app/api/facebook/callback
+```
+
+5. Add that exact same HTTPS redirect URI in the Meta dashboard under valid OAuth redirect URIs.
+6. Request the minimum Page permissions used by the demo:
 
 ```bash
 pages_show_list
@@ -148,8 +157,10 @@ pages_read_user_content
 pages_manage_engagement
 ```
 
-4. Put `FB_APP_ID` and `FB_APP_SECRET` in `backend/.env`.
-5. Restart the backend and click `Connect account` in the Shield panel.
+7. Put `FB_APP_ID`, `FB_APP_SECRET`, and the ngrok `FB_REDIRECT_URI` in `backend/.env`.
+8. Restart the backend and click `Connect account` in the Shield panel.
+
+Facebook OAuth requires a secure HTTPS redirect URL. Plain `http://127.0.0.1:8000/api/facebook/callback` can be useful for local route testing, but Facebook may block it for login. For the hackathon demo, ngrok is the fastest reliable option. Self-signed local SSL is not recommended because Facebook needs a publicly reachable trusted HTTPS URL.
 
 The callback exchanges the OAuth code for a user token, requests managed Pages from `/me/accounts`, and keeps the connected Page list in memory for the demo session. Tokens are not written to disk.
 

@@ -3,7 +3,7 @@ import json
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from config import GEMINI_ENABLED, GEMINI_API_KEY
+from config import GEMINI_ENABLED, GEMINI_API_KEY, GEMINI_MODEL
 from rag.retriever import format_context, get_entry, retrieve
 
 router = APIRouter()
@@ -58,6 +58,9 @@ def analyze_comment(payload: AnalyzeRequest):
     entries = retrieve(payload.comment_text, payload.claim_key, n=2)
     retrieved_context = format_context(entries)
 
+    if payload.comment_text.lower().startswith("user-submitted facebook"):
+        return fallback_response(payload.claim_key)
+
     if not GEMINI_ENABLED or not GEMINI_API_KEY or GEMINI_API_KEY == "your_key_here":
         return fallback_response(payload.claim_key)
 
@@ -66,17 +69,21 @@ def analyze_comment(payload: AnalyzeRequest):
     except ImportError:
         return fallback_response(payload.claim_key)
 
-    genai.configure(api_key=GEMINI_API_KEY)
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    prompt = PROMPT_TEMPLATE.format(
-        retrieved_context=retrieved_context,
-        comment_text=payload.comment_text,
-        language=payload.language,
-    )
-    response = model.generate_content(prompt)
-    text = response.text.strip()
-    if text.startswith("```"):
-        text = text.strip("`").replace("json", "", 1).strip()
-    data = json.loads(text)
-    data["facebook_url"] = "https://www.facebook.com"
-    return data
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel(GEMINI_MODEL)
+        prompt = PROMPT_TEMPLATE.format(
+            retrieved_context=retrieved_context,
+            comment_text=payload.comment_text,
+            language=payload.language,
+        )
+        response = model.generate_content(prompt)
+        text = response.text.strip()
+        if text.startswith("```"):
+            text = text.strip("`").replace("json", "", 1).strip()
+        data = json.loads(text)
+        data["facebook_url"] = "https://www.facebook.com"
+        return data
+    except Exception as exc:
+        print(f"Gemini analysis failed, using local fallback: {exc}")
+        return fallback_response(payload.claim_key)

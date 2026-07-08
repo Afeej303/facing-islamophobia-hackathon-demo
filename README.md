@@ -66,6 +66,12 @@ On Windows, you can also run:
 start-backend.bat
 ```
 
+If double-clicking closes too quickly or you want a separate visible terminal:
+
+```bash
+open-backend-terminal.bat
+```
+
 Start the frontend:
 
 ```bash
@@ -77,6 +83,12 @@ On Windows, you can also run:
 
 ```bash
 start-frontend.bat
+```
+
+To open both app terminals on Windows:
+
+```bash
+open-app-terminals.bat
 ```
 
 Open the Vite URL shown in the terminal.

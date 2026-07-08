@@ -39,6 +39,7 @@ Backend `.env`:
 
 ```bash
 GEMINI_API_KEY=your_key_here
+GEMINI_ENABLED=false
 FB_APP_ID=your_meta_app_id
 FB_APP_SECRET=your_meta_app_secret
 FB_GRAPH_VERSION=v20.0

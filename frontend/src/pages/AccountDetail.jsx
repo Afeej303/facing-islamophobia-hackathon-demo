@@ -8,6 +8,7 @@ export default function AccountDetail({ accountId }) {
   const [selectedComment, setSelectedComment] = useState(null);
   const [response, setResponse] = useState(null);
   const [loadingId, setLoadingId] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     getComments(accountId).then(setComments);
@@ -16,6 +17,7 @@ export default function AccountDetail({ accountId }) {
   const handleAnalyze = async (comment) => {
     setLoadingId(comment.id);
     setSelectedComment(comment);
+    setError("");
     try {
       const result = await analyzeComment({
         comment_text: comment.text,
@@ -23,6 +25,8 @@ export default function AccountDetail({ accountId }) {
         language: "english",
       });
       setResponse(result);
+    } catch (exception) {
+      setError("Could not generate a response. Make sure the backend is running, then try again.");
     } finally {
       setLoadingId("");
     }
@@ -34,6 +38,7 @@ export default function AccountDetail({ accountId }) {
         <h2>Flagged comments</h2>
         <p>Select a comment to generate a calm, sourced counter-response.</p>
       </div>
+      {error && <div className="errorBanner">{error}</div>}
       <div className="commentList">
         {comments.map((comment) => (
           <CommentCard

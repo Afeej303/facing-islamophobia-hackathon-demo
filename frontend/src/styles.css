@@ -503,6 +503,16 @@ textarea {
   background: #d1fae5;
 }
 
+.errorBanner {
+  max-width: 920px;
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  color: #991b1b;
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+}
+
 .connectToast {
   max-width: 760px;
 }

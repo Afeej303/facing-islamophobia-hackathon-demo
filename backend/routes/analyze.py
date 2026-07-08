@@ -3,7 +3,7 @@ import json
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from config import GEMINI_API_KEY
+from config import GEMINI_ENABLED, GEMINI_API_KEY
 from rag.retriever import format_context, get_entry, retrieve
 
 router = APIRouter()
@@ -58,7 +58,7 @@ def analyze_comment(payload: AnalyzeRequest):
     entries = retrieve(payload.comment_text, payload.claim_key, n=2)
     retrieved_context = format_context(entries)
 
-    if not GEMINI_API_KEY or GEMINI_API_KEY == "your_key_here":
+    if not GEMINI_ENABLED or not GEMINI_API_KEY or GEMINI_API_KEY == "your_key_here":
         return fallback_response(payload.claim_key)
 
     try:

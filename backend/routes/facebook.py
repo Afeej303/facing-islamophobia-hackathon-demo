@@ -6,21 +6,15 @@ from urllib.request import urlopen
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import HTMLResponse
 
-from config import FB_APP_ID, FB_APP_SECRET, FB_GRAPH_VERSION, FB_REDIRECT_URI, FRONTEND_URL
+from config import FB_APP_ID, FB_APP_SECRET, FB_GRAPH_VERSION, FB_REDIRECT_URI, FB_SCOPES, FRONTEND_URL
 
 router = APIRouter()
-
-SCOPES = [
-    "pages_show_list",
-    "pages_read_engagement",
-    "pages_read_user_content",
-    "pages_manage_engagement",
-]
 
 _oauth_states = set()
 _connection = {
     "connected": False,
     "pages": [],
+    "profile": None,
 }
 
 
@@ -40,8 +34,9 @@ def facebook_status():
         "configured": facebook_configured(),
         "connected": _connection["connected"],
         "pages": _connection["pages"],
-        "required_env": ["FB_APP_ID", "FB_APP_SECRET", "FB_REDIRECT_URI"],
-        "permissions": SCOPES,
+        "profile": _connection["profile"],
+        "required_env": ["FB_APP_ID", "FB_APP_SECRET", "FB_REDIRECT_URI", "FB_SCOPES"],
+        "permissions": FB_SCOPES,
     }
 
 
@@ -51,7 +46,7 @@ def facebook_login_url():
         return {
             "configured": False,
             "message": "Set FB_APP_ID and FB_APP_SECRET in backend/.env, then restart the backend.",
-            "required_permissions": SCOPES,
+            "required_permissions": FB_SCOPES,
         }
 
     state = secrets.token_urlsafe(24)
@@ -61,7 +56,7 @@ def facebook_login_url():
             "client_id": FB_APP_ID,
             "redirect_uri": FB_REDIRECT_URI,
             "state": state,
-            "scope": ",".join(SCOPES),
+            "scope": ",".join(FB_SCOPES),
             "response_type": "code",
         }
     )
@@ -115,24 +110,41 @@ def facebook_callback(
         },
     )
     user_token = token_payload["access_token"]
-    pages_payload = graph_get(
-        "me/accounts",
-        {
-            "access_token": user_token,
-            "fields": "id,name,access_token,tasks",
-        },
-    )
-    pages = [
-        {
-            "id": page.get("id"),
-            "name": page.get("name"),
-            "tasks": page.get("tasks", []),
+    if "pages_show_list" in FB_SCOPES:
+        pages_payload = graph_get(
+            "me/accounts",
+            {
+                "access_token": user_token,
+                "fields": "id,name,access_token,tasks",
+            },
+        )
+        pages = [
+            {
+                "id": page.get("id"),
+                "name": page.get("name"),
+                "tasks": page.get("tasks", []),
+                "connected": True,
+            }
+            for page in pages_payload.get("data", [])
+        ]
+        _connection["connected"] = bool(pages)
+        _connection["pages"] = pages
+        _connection["profile"] = None
+    else:
+        profile = graph_get(
+            "me",
+            {
+                "access_token": user_token,
+                "fields": "id,name",
+            },
+        )
+        _connection["connected"] = True
+        _connection["pages"] = []
+        _connection["profile"] = {
+            "id": profile.get("id"),
+            "name": profile.get("name"),
             "connected": True,
         }
-        for page in pages_payload.get("data", [])
-    ]
-    _connection["connected"] = bool(pages)
-    _connection["pages"] = pages
 
     shield_url = f"{FRONTEND_URL.rstrip('/')}/shield"
     return f"""
@@ -142,6 +154,7 @@ def facebook_callback(
       <body style="font-family: Inter, Arial, sans-serif; padding: 32px;">
         <h1>Facebook connection complete</h1>
         <p>You can close this tab and return to IslamGuard.</p>
+        <p>Requested scopes: {", ".join(FB_SCOPES)}</p>
         <p><a href="{shield_url}">Back to Shield panel</a></p>
       </body>
     </html>

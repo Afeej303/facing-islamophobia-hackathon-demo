@@ -44,6 +44,7 @@ FB_APP_SECRET=your_meta_app_secret
 FB_GRAPH_VERSION=v20.0
 FB_REDIRECT_URI=https://your-ngrok-domain.ngrok-free.app/api/facebook/callback
 FRONTEND_URL=http://127.0.0.1:5173
+FB_SCOPES=public_profile
 ```
 
 Frontend `.env`:
@@ -148,19 +149,24 @@ FB_REDIRECT_URI=https://your-ngrok-domain.ngrok-free.app/api/facebook/callback
 ```
 
 5. Add that exact same HTTPS redirect URI in the Meta dashboard under valid OAuth redirect URIs.
-6. Request the minimum Page permissions used by the demo:
+6. Start with basic Facebook Login while testing:
 
 ```bash
-pages_show_list
-pages_read_engagement
-pages_read_user_content
-pages_manage_engagement
+FB_SCOPES=public_profile
 ```
 
-7. Put `FB_APP_ID`, `FB_APP_SECRET`, and the ngrok `FB_REDIRECT_URI` in `backend/.env`.
-8. Restart the backend and click `Connect account` in the Shield panel.
+7. After the app is configured for Pages API permissions in Meta, switch to the Page scopes:
+
+```bash
+FB_SCOPES=pages_show_list,pages_read_engagement,pages_read_user_content,pages_manage_engagement
+```
+
+8. Put `FB_APP_ID`, `FB_APP_SECRET`, `FB_SCOPES`, and the ngrok `FB_REDIRECT_URI` in `backend/.env`.
+9. Restart the backend and click `Connect account` in the Shield panel.
 
 Facebook OAuth requires a secure HTTPS redirect URL. Plain `http://127.0.0.1:8000/api/facebook/callback` can be useful for local route testing, but Facebook may block it for login. For the hackathon demo, ngrok is the fastest reliable option. Self-signed local SSL is not recommended because Facebook needs a publicly reachable trusted HTTPS URL.
+
+If Facebook says the Page scopes are invalid, keep `FB_SCOPES=public_profile` for the demo login proof. Page permissions require the correct Meta app setup and may require app review or a tester/developer account before Facebook accepts them.
 
 The callback exchanges the OAuth code for a user token, requests managed Pages from `/me/accounts`, and keeps the connected Page list in memory for the demo session. Tokens are not written to disk.
 

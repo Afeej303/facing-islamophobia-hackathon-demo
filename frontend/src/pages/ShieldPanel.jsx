@@ -81,7 +81,9 @@ export default function ShieldPanel() {
           <h3>Connect your Facebook account to enable auto-shield</h3>
           <p>
             {facebook?.connected
-              ? `${facebook.pages.length} Facebook page${facebook.pages.length === 1 ? "" : "s"} connected.`
+              ? facebook.pages?.length
+                ? `${facebook.pages.length} Facebook page${facebook.pages.length === 1 ? "" : "s"} connected.`
+                : `Facebook profile connected${facebook.profile?.name ? `: ${facebook.profile.name}` : "."}`
               : "Requires a Meta app with Page permissions and OAuth credentials."}
           </p>
         </div>
@@ -94,6 +96,11 @@ export default function ShieldPanel() {
           {facebook.pages.map((page) => (
             <span key={page.id}>{page.name}</span>
           ))}
+        </div>
+      ) : null}
+      {facebook?.connected && facebook?.profile ? (
+        <div className="connectedPages">
+          <span>{facebook.profile.name || "Facebook profile connected"}</span>
         </div>
       ) : null}
       {modal && (

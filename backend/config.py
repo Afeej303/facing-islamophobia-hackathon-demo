@@ -11,3 +11,8 @@ FB_APP_SECRET = os.getenv("FB_APP_SECRET")
 FB_GRAPH_VERSION = os.getenv("FB_GRAPH_VERSION", "v20.0")
 FB_REDIRECT_URI = os.getenv("FB_REDIRECT_URI", "http://127.0.0.1:8000/api/facebook/callback")
 FRONTEND_URL = os.getenv("FRONTEND_URL", "http://127.0.0.1:5173")
+FB_SCOPES = [
+    scope.strip()
+    for scope in os.getenv("FB_SCOPES", "public_profile").split(",")
+    if scope.strip()
+]

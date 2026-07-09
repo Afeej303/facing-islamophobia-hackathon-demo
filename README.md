@@ -137,6 +137,7 @@ The frontend calls only `src/api/client.js`. The backend exposes a stable `/api`
 - `GET /api/facebook/status`
 - `GET /api/facebook/login-url`
 - `GET /api/facebook/callback`
+- `GET /api/infrastructure/status`
 
 In demo mode, `routes/mock.py` provides representative Facebook data. A production scraper can replace that data source while preserving the same frontend contract. `scraper/facebook.py` contains the intended class structure for a later scraper integration.
 
@@ -167,8 +168,16 @@ When `USE_MOCK=false`, the backend proxies data from `DATA_API_BASE`:
 If the Linux backend or upstream data API is missing, the UI shows:
 
 ```text
-Could not load data from the Linux backend. API not found or unreachable.
+Live crawler data is unavailable. This feature needs the Linux worker stack: Redis, Celery workers, Celery Beat, Playwright browser workers, Prometheus, and Grafana. Vercel can host this frontend, but it cannot run those long-running services.
 ```
+
+The intended production split is:
+
+- Vercel: React frontend and lightweight API shell/proxy.
+- Linux worker host: Redis, Celery workers, Celery Beat, Playwright browsers, Prometheus, and Grafana.
+- Data API: exposes normalized dashboard data to the frontend contract.
+
+Use `GET /api/infrastructure/status` to show or debug whether the Linux data stack is configured.
 
 If you still want local demo data, set:
 

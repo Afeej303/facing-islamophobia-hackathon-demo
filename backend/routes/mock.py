@@ -9,7 +9,11 @@ from config import DATA_API_BASE, USE_MOCK
 router = APIRouter()
 
 
-API_NOT_FOUND_MESSAGE = "Could not load data from the Linux backend. API not found or unreachable."
+LINUX_STACK_ERROR = (
+    "Live crawler data is unavailable. This feature needs the Linux worker stack: "
+    "Redis, Celery workers, Celery Beat, Playwright browser workers, Prometheus, and Grafana. "
+    "Vercel can host the frontend/API shell, but it cannot run those long-running services."
+)
 
 
 def external_get(path: str):
@@ -18,7 +22,7 @@ def external_get(path: str):
             return None
         raise HTTPException(
             status_code=503,
-            detail="DATA_API_BASE is not configured and mock mode is disabled.",
+            detail=LINUX_STACK_ERROR,
         )
 
     url = f"{DATA_API_BASE}{path}"
@@ -26,9 +30,9 @@ def external_get(path: str):
         with urlopen(url, timeout=15) as response:
             return json.loads(response.read().decode("utf-8"))
     except HTTPError as exc:
-        raise HTTPException(status_code=exc.code, detail=f"{API_NOT_FOUND_MESSAGE} Upstream returned {exc.code}.")
+        raise HTTPException(status_code=exc.code, detail=f"{LINUX_STACK_ERROR} Upstream returned {exc.code}.")
     except (URLError, TimeoutError, json.JSONDecodeError) as exc:
-        raise HTTPException(status_code=502, detail=f"{API_NOT_FOUND_MESSAGE} {exc}")
+        raise HTTPException(status_code=502, detail=f"{LINUX_STACK_ERROR} {exc}")
 
 SUBMITTED_SOURCE_TEXT = "ഉപയോക്താവ് സമർപ്പിച്ച മലയാളത്തിലുള്ള ഫേസ്ബുക്ക് പോസ്റ്റ്/റീൽ ഇസ്‌ലാം വിരുദ്ധ ഉള്ളടക്കമായി ഫ്ലാഗ് ചെയ്തിരിക്കുന്നു. കൃത്യമായ ഉള്ളടക്കം പരിശോധിക്കാൻ ഒറിജിനൽ ലിങ്ക് തുറക്കുക."
 

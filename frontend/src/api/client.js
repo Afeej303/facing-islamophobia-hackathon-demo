@@ -1,5 +1,6 @@
 export const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000/api";
-export const API_LOAD_ERROR = "Could not load data from the Linux backend. API not found or unreachable.";
+export const API_LOAD_ERROR =
+  "Live crawler data is unavailable. This feature needs the Linux worker stack: Redis, Celery workers, Celery Beat, Playwright browser workers, Prometheus, and Grafana. Vercel can host this frontend, but it cannot run those long-running services.";
 
 const parse = async (response) => {
   if (!response.ok) {

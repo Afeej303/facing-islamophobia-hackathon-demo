@@ -1,6 +1,34 @@
+import json
+from urllib.error import HTTPError, URLError
+from urllib.request import urlopen
+
 from fastapi import APIRouter, HTTPException
 
+from config import DATA_API_BASE, USE_MOCK
+
 router = APIRouter()
+
+
+API_NOT_FOUND_MESSAGE = "Could not load data from the Linux backend. API not found or unreachable."
+
+
+def external_get(path: str):
+    if not DATA_API_BASE:
+        if USE_MOCK:
+            return None
+        raise HTTPException(
+            status_code=503,
+            detail="DATA_API_BASE is not configured and mock mode is disabled.",
+        )
+
+    url = f"{DATA_API_BASE}{path}"
+    try:
+        with urlopen(url, timeout=15) as response:
+            return json.loads(response.read().decode("utf-8"))
+    except HTTPError as exc:
+        raise HTTPException(status_code=exc.code, detail=f"{API_NOT_FOUND_MESSAGE} Upstream returned {exc.code}.")
+    except (URLError, TimeoutError, json.JSONDecodeError) as exc:
+        raise HTTPException(status_code=502, detail=f"{API_NOT_FOUND_MESSAGE} {exc}")
 
 SUBMITTED_SOURCE_TEXT = "ഉപയോക്താവ് സമർപ്പിച്ച മലയാളത്തിലുള്ള ഫേസ്ബുക്ക് പോസ്റ്റ്/റീൽ ഇസ്‌ലാം വിരുദ്ധ ഉള്ളടക്കമായി ഫ്ലാഗ് ചെയ്തിരിക്കുന്നു. കൃത്യമായ ഉള്ളടക്കം പരിശോധിക്കാൻ ഒറിജിനൽ ലിങ്ക് തുറക്കുക."
 
@@ -276,11 +304,17 @@ COMMENTS = {
 
 @router.get("/accounts")
 def get_accounts():
+    data = external_get("/accounts")
+    if data is not None:
+        return data
     return ACCOUNTS
 
 
 @router.get("/accounts/{account_id}/comments")
 def get_comments(account_id: str):
+    data = external_get(f"/accounts/{account_id}/comments")
+    if data is not None:
+        return data
     if account_id not in COMMENTS:
         raise HTTPException(status_code=404, detail="Account not found")
     return COMMENTS[account_id]
@@ -288,6 +322,9 @@ def get_comments(account_id: str):
 
 @router.get("/stats")
 def get_stats():
+    data = external_get("/stats")
+    if data is not None:
+        return data
     return {
         "total_flagged_today": 28,
         "accounts_monitored": len(ACCOUNTS),

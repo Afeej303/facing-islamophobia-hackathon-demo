@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { analyzeComment, getComments } from "../api/client.js";
+import { API_LOAD_ERROR, analyzeComment, getComments } from "../api/client.js";
 import CommentCard from "../components/CommentCard.jsx";
 import ResponseDrawer from "../components/ResponseDrawer.jsx";
 
@@ -11,7 +11,13 @@ export default function AccountDetail({ accountId }) {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getComments(accountId).then(setComments);
+    setError("");
+    getComments(accountId)
+      .then(setComments)
+      .catch((exception) => {
+        setComments([]);
+        setError(exception.message || API_LOAD_ERROR);
+      });
   }, [accountId]);
 
   const handleAnalyze = async (comment) => {
@@ -26,7 +32,7 @@ export default function AccountDetail({ accountId }) {
       });
       setResponse(result);
     } catch (exception) {
-      setError("Could not generate a response. Make sure the backend is running, then try again.");
+      setError(exception.message || "Could not generate a response. Make sure the backend is running, then try again.");
     } finally {
       setLoadingId("");
     }

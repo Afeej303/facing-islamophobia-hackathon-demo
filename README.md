@@ -38,6 +38,8 @@ npm install
 Backend `.env`:
 
 ```bash
+USE_MOCK=false
+DATA_API_BASE=https://your-linux-backend.example.com/api
 GEMINI_API_KEY=your_key_here
 GEMINI_ENABLED=false
 GEMINI_MODEL=gemini-2.0-flash
@@ -50,6 +52,12 @@ FB_SCOPES=public_profile
 ```
 
 Frontend `.env`:
+
+```bash
+VITE_API_BASE=https://your-linux-backend.example.com/api
+```
+
+For local development, use:
 
 ```bash
 VITE_API_BASE=http://localhost:8000/api
@@ -131,6 +139,42 @@ The frontend calls only `src/api/client.js`. The backend exposes a stable `/api`
 - `GET /api/facebook/callback`
 
 In demo mode, `routes/mock.py` provides representative Facebook data. A production scraper can replace that data source while preserving the same frontend contract. `scraper/facebook.py` contains the intended class structure for a later scraper integration.
+
+## API Data Mode
+
+The frontend never reads local mock files directly. It always calls the backend through `VITE_API_BASE`.
+
+For Vercel:
+
+```bash
+VITE_API_BASE=https://your-linux-backend.example.com/api
+```
+
+For the Linux backend, set:
+
+```bash
+USE_MOCK=false
+DATA_API_BASE=https://your-data-provider.example.com/api
+```
+
+When `USE_MOCK=false`, the backend proxies data from `DATA_API_BASE`:
+
+- `GET /accounts`
+- `GET /accounts/{account_id}/comments`
+- `GET /stats`
+- `GET /shield/log`
+
+If the Linux backend or upstream data API is missing, the UI shows:
+
+```text
+Could not load data from the Linux backend. API not found or unreachable.
+```
+
+If you still want local demo data, set:
+
+```bash
+USE_MOCK=true
+```
 
 ## Facebook Connection
 

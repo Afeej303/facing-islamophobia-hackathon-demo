@@ -1,6 +1,8 @@
 from fastapi import APIRouter
 from pydantic import BaseModel
 
+from routes.mock import external_get
+
 router = APIRouter()
 
 
@@ -36,6 +38,9 @@ LOG = [
 
 @router.get("/shield/log")
 def get_shield_log():
+    data = external_get("/shield/log")
+    if data is not None:
+        return data
     return LOG
 
 

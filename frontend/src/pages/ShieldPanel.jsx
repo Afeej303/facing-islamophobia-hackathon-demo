@@ -1,16 +1,26 @@
 import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, EyeOff, Trash2, X } from "lucide-react";
-import { getFacebookLoginUrl, getFacebookStatus, getShieldLog } from "../api/client.js";
+import { API_LOAD_ERROR, getFacebookLoginUrl, getFacebookStatus, getShieldLog } from "../api/client.js";
 
 export default function ShieldPanel() {
   const [log, setLog] = useState([]);
   const [modal, setModal] = useState(false);
   const [facebook, setFacebook] = useState(null);
   const [connectMessage, setConnectMessage] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    getShieldLog().then(setLog);
-    getFacebookStatus().then(setFacebook);
+    Promise.all([getShieldLog(), getFacebookStatus()])
+      .then(([logData, facebookData]) => {
+        setLog(logData);
+        setFacebook(facebookData);
+        setError("");
+      })
+      .catch((exception) => {
+        setLog([]);
+        setFacebook(null);
+        setError(exception.message || API_LOAD_ERROR);
+      });
   }, []);
 
   const totals = useMemo(
@@ -31,7 +41,7 @@ export default function ShieldPanel() {
       }
       setConnectMessage(result.message || "Facebook connection is not configured yet.");
     } catch (error) {
-      setConnectMessage("Backend is not reachable. Start the backend, then try connecting again.");
+      setConnectMessage(API_LOAD_ERROR);
     }
     setModal(true);
   };
@@ -42,6 +52,7 @@ export default function ShieldPanel() {
         <h2>Shield - Protecting Muslim voices on Facebook</h2>
         <p>Moderation actions for hateful comments on owned content.</p>
       </div>
+      {error && <div className="errorBanner">{error}</div>}
       <div className="statGrid two">
         <div className="statCard">
           <EyeOff size={21} />

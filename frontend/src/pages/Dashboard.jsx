@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { EyeOff, MessageSquareReply, Radar, ShieldCheck } from "lucide-react";
-import { getAccounts, getStats } from "../api/client.js";
+import { API_LOAD_ERROR, getAccounts, getStats } from "../api/client.js";
 import FlaggedAccountCard from "../components/FlaggedAccountCard.jsx";
 
 const statIcons = [Radar, ShieldCheck, MessageSquareReply, EyeOff];
@@ -8,10 +8,20 @@ const statIcons = [Radar, ShieldCheck, MessageSquareReply, EyeOff];
 export default function Dashboard({ navigate }) {
   const [accounts, setAccounts] = useState([]);
   const [stats, setStats] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    getAccounts().then(setAccounts);
-    getStats().then(setStats);
+    Promise.all([getAccounts(), getStats()])
+      .then(([accountsData, statsData]) => {
+        setAccounts(accountsData);
+        setStats(statsData);
+        setError("");
+      })
+      .catch((exception) => {
+        setAccounts([]);
+        setStats(null);
+        setError(exception.message || API_LOAD_ERROR);
+      });
   }, []);
 
   const statItems = stats
@@ -39,8 +49,9 @@ export default function Dashboard({ navigate }) {
       </div>
       <div className="sectionTitle">
         <h2>Flagged accounts</h2>
-        <p>Representative public-page data plus submitted Facebook sources pending account resolution.</p>
+        <p>Live data loaded from the configured backend API.</p>
       </div>
+      {error && <div className="errorBanner">{error}</div>}
       <div className="accountGrid">
         {accounts.map((account) => (
           <FlaggedAccountCard key={account.id} account={account} onView={(id) => navigate(`/account/${id}`)} />

@@ -1,28 +1,42 @@
-const BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000/api";
+export const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8000/api";
+export const API_LOAD_ERROR = "Could not load data from the Linux backend. API not found or unreachable.";
 
 const parse = async (response) => {
   if (!response.ok) {
-    const message = await response.text();
+    let message = await response.text();
+    try {
+      const parsed = JSON.parse(message);
+      message = parsed.detail || message;
+    } catch {
+      // Keep the raw response text.
+    }
     throw new Error(message || "Request failed");
   }
   return response.json();
 };
 
-export const getAccounts = () => fetch(`${BASE}/accounts`).then(parse);
-export const getComments = (accountId) => fetch(`${BASE}/accounts/${accountId}/comments`).then(parse);
-export const getStats = () => fetch(`${BASE}/stats`).then(parse);
+const request = (path, options) =>
+  fetch(`${API_BASE}${path}`, options)
+    .then(parse)
+    .catch((error) => {
+      throw new Error(error.message || API_LOAD_ERROR);
+    });
+
+export const getAccounts = () => request("/accounts");
+export const getComments = (accountId) => request(`/accounts/${accountId}/comments`);
+export const getStats = () => request("/stats");
 export const analyzeComment = (payload) =>
-  fetch(`${BASE}/analyze`, {
+  request("/analyze", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  }).then(parse);
-export const getShieldLog = () => fetch(`${BASE}/shield/log`).then(parse);
+  });
+export const getShieldLog = () => request("/shield/log");
 export const hideComment = (payload) =>
-  fetch(`${BASE}/shield/hide`, {
+  request("/shield/hide", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
-  }).then(parse);
-export const getFacebookStatus = () => fetch(`${BASE}/facebook/status`).then(parse);
-export const getFacebookLoginUrl = () => fetch(`${BASE}/facebook/login-url`).then(parse);
+  });
+export const getFacebookStatus = () => request("/facebook/status");
+export const getFacebookLoginUrl = () => request("/facebook/login-url");

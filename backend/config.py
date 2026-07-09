@@ -4,7 +4,12 @@ from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).resolve().parent / ".env")
 
-USE_MOCK = True
+def env_bool(name: str, default: str = "false"):
+    return os.getenv(name, default).lower() in {"1", "true", "yes", "on"}
+
+
+USE_MOCK = env_bool("USE_MOCK", "true")
+DATA_API_BASE = os.getenv("DATA_API_BASE", "").rstrip("/")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_ENABLED = os.getenv("GEMINI_ENABLED", "false").lower() == "true"
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")

@@ -40,6 +40,7 @@ Backend `.env`:
 ```bash
 USE_MOCK=false
 DATA_API_BASE=https://your-linux-backend.example.com/api
+REDIS_URL=redis://localhost:6379/0
 GEMINI_API_KEY=your_key_here
 GEMINI_ENABLED=false
 GEMINI_MODEL=gemini-2.0-flash
@@ -178,6 +179,42 @@ The intended production split is:
 - Data API: exposes normalized dashboard data to the frontend contract.
 
 Use `GET /api/infrastructure/status` to show or debug whether the Linux data stack is configured.
+
+## Linux Worker Stack
+
+The repo includes real integration boundaries for the Linux-only services without requiring Vercel to run them.
+
+Install Linux worker dependencies:
+
+```bash
+cd backend
+python -m pip install -r requirements-linux.txt
+python -m playwright install chromium
+```
+
+Run Redis separately, then start workers:
+
+```bash
+celery -A workers.celery_app.celery_app worker --loglevel=info
+celery -A workers.celery_app.celery_app beat --loglevel=info
+```
+
+The worker flow is:
+
+1. Celery Beat schedules `scan_facebook_sources`.
+2. Celery workers call the Playwright scraper boundary in `workers/playwright_scraper.py`.
+3. Normalized snapshots are written into Redis keys:
+
+```text
+islamguard:accounts
+islamguard:stats
+islamguard:shield_log
+islamguard:comments:{account_id}
+```
+
+4. FastAPI reads those Redis snapshots first, then falls back to `DATA_API_BASE`, then demo mock data only when `USE_MOCK=true`.
+
+Prometheus metric definitions live in `backend/prometheus_metrics.py`; Grafana should read from Prometheus in the Linux deployment.
 
 If you still want local demo data, set:
 

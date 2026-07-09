@@ -5,6 +5,7 @@ from urllib.request import urlopen
 from fastapi import APIRouter, HTTPException
 
 from config import DATA_API_BASE, USE_MOCK
+from data_sources import DataSourceUnavailable, redis_json
 
 router = APIRouter()
 
@@ -17,6 +18,21 @@ LINUX_STACK_ERROR = (
 
 
 def external_get(path: str):
+    redis_key = {
+        "/accounts": "islamguard:accounts",
+        "/stats": "islamguard:stats",
+        "/shield/log": "islamguard:shield_log",
+    }.get(path)
+    if path.startswith("/accounts/") and path.endswith("/comments"):
+        account_id = path.split("/")[2]
+        redis_key = f"islamguard:comments:{account_id}"
+
+    if redis_key:
+        try:
+            return redis_json(redis_key)
+        except DataSourceUnavailable:
+            pass
+
     if not DATA_API_BASE:
         if USE_MOCK:
             return None

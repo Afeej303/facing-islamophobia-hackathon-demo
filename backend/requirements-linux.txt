@@ -1,0 +1,5 @@
+-r requirements.txt
+celery
+redis
+playwright
+prometheus-client

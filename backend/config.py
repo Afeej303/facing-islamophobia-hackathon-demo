@@ -10,6 +10,7 @@ def env_bool(name: str, default: str = "false"):
 
 USE_MOCK = env_bool("USE_MOCK", "true")
 DATA_API_BASE = os.getenv("DATA_API_BASE", "").rstrip("/")
+REDIS_URL = os.getenv("REDIS_URL", "")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GEMINI_ENABLED = os.getenv("GEMINI_ENABLED", "false").lower() == "true"
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")

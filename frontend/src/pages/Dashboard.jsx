@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { EyeOff, MessageSquareReply, Radar, ShieldCheck } from "lucide-react";
 import { API_LOAD_ERROR, getAccounts, getStats } from "../api/client.js";
 import FlaggedAccountCard from "../components/FlaggedAccountCard.jsx";
+import InfrastructureNotice from "../components/InfrastructureNotice.jsx";
 
 const statIcons = [Radar, ShieldCheck, MessageSquareReply, EyeOff];
 
@@ -35,6 +36,7 @@ export default function Dashboard({ navigate }) {
 
   return (
     <section className="page">
+      <InfrastructureNotice />
       <div className="statGrid">
         {statItems.map(([label, value], index) => {
           const Icon = statIcons[index];

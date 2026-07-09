@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { ExternalLink, EyeOff, Trash2, X } from "lucide-react";
 import { API_LOAD_ERROR, getFacebookLoginUrl, getFacebookStatus, getShieldLog } from "../api/client.js";
+import InfrastructureNotice from "../components/InfrastructureNotice.jsx";
 
 export default function ShieldPanel() {
   const [log, setLog] = useState([]);
@@ -48,6 +49,7 @@ export default function ShieldPanel() {
 
   return (
     <section className="page">
+      <InfrastructureNotice />
       <div className="sectionTitle">
         <h2>Shield - Protecting Muslim voices on Facebook</h2>
         <p>Moderation actions for hateful comments on owned content.</p>

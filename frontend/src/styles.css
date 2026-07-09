@@ -218,6 +218,34 @@ button {
   color: #64748b;
 }
 
+.infraNotice {
+  max-width: 980px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  margin: 0 0 22px;
+  padding: 16px;
+  border-radius: 8px;
+  color: #334155;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+}
+
+.infraNotice svg {
+  flex: 0 0 auto;
+  color: #f59e0b;
+}
+
+.infraNotice h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+}
+
+.infraNotice p {
+  margin: 0;
+  line-height: 1.55;
+}
+
 .accountGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(285px, 1fr));
